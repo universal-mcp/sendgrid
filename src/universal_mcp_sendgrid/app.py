@@ -18,7 +18,7 @@ class SendgridApp(APIApplication):
             dict[str, Any]: API response data.
 
         Tags:
-            IP Access Management
+            IP Access Management, important
         """
         url = f"{self.base_url}/v3/access_settings/activity"
         query_params = {k: v for k, v in [('limit', limit)] if v is not None}
@@ -138,7 +138,7 @@ class SendgridApp(APIApplication):
             list[Any]: API response data.
 
         Tags:
-            Alerts
+            Alerts, important
         """
         url = f"{self.base_url}/v3/alerts"
         query_params = {}
@@ -746,7 +746,7 @@ class SendgridApp(APIApplication):
             dict[str, Any]: API response data.
 
         Tags:
-            Campaigns API
+            Campaigns API, important
         """
         url = f"{self.base_url}/v3/campaigns"
         query_params = {k: v for k, v in [('limit', limit), ('offset', offset)] if v is not None}
@@ -1656,7 +1656,7 @@ class SendgridApp(APIApplication):
             dict[str, Any]: API response data.
 
         Tags:
-            Segments
+            Segments, important
         """
         url = f"{self.base_url}/v3/contactdb/segments"
         query_params = {}
