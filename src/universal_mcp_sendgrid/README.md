@@ -84,10 +84,7 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `get_recipient_list` | Retrieves a list of contact lists associated with a specific recipient identified by their recipient ID. |
 | `list_reserved_field` | Retrieves a list of reserved field names in SendGrid's contact database that cannot be used for custom field names. |
 | `list_segment` | Retrieves a list of all segments defined in the contact database using the SendGrid API. |
-| `create_segment` | Creates a new marketing segment using the API at path "/v3/marketing/segments/2.0" and returns a status indicating the creation result. |
-| `delete_segment` | Deletes a marketing segment identified by the provided segment ID and returns a status code indicating the outcome of the operation. |
-| `get_segment` | Retrieves details about a marketing segment by its ID, optionally including query JSON, using the GET method. |
-| `update_segment` | Updates a marketing segment using the PATCH method, allowing partial modifications to the specified segment resource. |
+| `delete_segment` | Deletes a marketing segment identified by the segment ID using the DELETE method, returning a status code indicating the outcome of the operation. |
 | `list_recipient_for_segment` | Retrieves a list of recipients for a specified contact database segment using pagination controls. |
 | `list_status` | Retrieves the status of current and recent contact export jobs from the SendGrid contact database. |
 | `list_design` | Retrieves a paginated list of design resources, supporting optional filtering by page size, page token, and summary mode. |
@@ -104,13 +101,7 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `list_subuser_engagement_quality_score` | Retrieves engagement quality scores for specified subusers, including overall scores and contributing metrics, using optional parameters for date range and pagination. |
 | `list_geo_stat` | Retrieves geographic statistics for a specified country using the GET method, allowing for advanced filtering by date range and aggregation options. |
 | `list_ip` | Retrieves a list of IP addresses based on specified query parameters, including filtering by lease status, enabled status, pool assignment, and other criteria. |
-| `add_ip` | Submits a list of IP addresses using a JSON payload via the POST method to the "/v3/send_ips/ips" endpoint, returning a success status code upon completion. |
 | `list_assigned_ip` | Retrieves a list of assigned IP addresses using the "GET" method at the "/v3/ips/assigned" path. |
-| `list_ip_pool` | Retrieves a list of IP pools based on provided parameters such as limit, after key, query IP, region, and include region, returning a successful response with details about the IP pools. |
-| `create_ip_pool` | Creates IP pools using a JSON payload and returns a successful creation status upon completion. |
-| `delete_ip_pool` | Deletes a specific IP pool identified by the {poolid} using the DELETE method, returning a 204 No Content response upon successful deletion. |
-| `get_ip_pool` | Retrieves details for a specified IP pool, including its name, ID, and a sample list of associated IP addresses[1]. |
-| `update_ip_pool` | Updates a specified IP pool using the provided JSON data and returns a status message. |
 | `add_ip_to_ip_pool` | Adds a new IP address to the specified IP pool. |
 | `delete_ip_from_ip_pool` | Deletes the specified IP address from the given IP pool. |
 | `list_remaining_ip_count` | Retrieves the number of remaining IP addresses available for allocation. |
@@ -118,7 +109,6 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `warm_up_ip` | Initiates the warmup process for one or more IP addresses by submitting a request in JSON format and returns a success or not found response. |
 | `stop_ip_warm_up` | Removes the specified IP address from the warmup pool and returns no content upon successful deletion. |
 | `get_warm_up_ip` | Retrieves information about warming up a specific IP address using the GET method and returns a response based on the operation's success or failure. |
-| `get_ip` | Retrieves detailed information for a specified IP address, including assignment status, associated pools, and optional region details. |
 | `create_mail_batch` | Creates and submits a batch of emails in a single request, supporting optional delegation and returning a confirmation upon successful processing. |
 | `get_mail_batch` | Retrieves the status and details of a specific batch mail operation by its batch ID. |
 | `send_mail` | Sends an email using the specified mail service by transmitting the required data via the POST method at the "/v3/mail/send" endpoint. |
@@ -133,14 +123,10 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `update_forward_bounce` | Modifies mail settings for forwarding and bouncing using the "PATCH" method, updating specified fields in the resource located at "/v3/mail_settings/forward_bounce". |
 | `list_forward_spam` | Retrieves the current Forward Spam mail settings, including the enabled status and any email addresses designated to receive forwarded spam reports[2][3]. |
 | `update_forward_spam` | Updates mail settings for spam forwarding using the "PATCH" method, allowing partial modifications to the existing configuration. |
-| `list_template` | Retrieves a list of templates using the "GET" method, allowing parameters such as generations, page size, and page token for filtering and pagination. |
-| `update_template` | Modifies a specific template by updating its properties using the PATCH method, allowing for partial changes to the template identified by {template_id}. |
 | `list_mailbox_provider_stat` | Retrieves email statistics segmented by recipient mailbox provider, allowing for filtering by provider, date range, and aggregation type. |
-| `delete_contact` | Removes specified contacts from a marketing list by their IDs, accepting a list of contact IDs as a required query parameter. |
 | `list_contact` | Retrieves a list of contacts from the marketing service, returning their details in the response. |
 | `update_contact` | Updates or adds marketing contact information by replacing the existing contact data with the provided JSON payload. |
 | `list_batched_contact` | Creates a batch of contacts in the marketing system using a JSON payload and returns a success status upon completion. |
-| `list_contact_count` | Retrieves the total number of contacts in the specified marketing list. |
 | `list_export_contact` | Retrieves a list or details of marketing contact exports using the "GET" method at the "/v3/marketing/contacts/exports" path. |
 | `export_contact` | Exports contacts using a POST request to the "/v3/marketing/contacts/exports" endpoint, accepting JSON data in the request body. |
 | `get_export_contact` | Retrieves the details of a specific marketing contacts export by its ID using the "GET" method. |
@@ -164,26 +150,19 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `delete_marketing_list` | Deletes a specific marketing list using the provided ID and optionally deletes associated contacts if the `delete_contacts` query parameter is set to true. |
 | `get_marketing_list` | Retrieves details of a marketing list by its ID using the "GET" method, optionally filtering by contact sample if specified. |
 | `update_marketing_list` | Modifies a specific marketing list identified by its ID using the PATCH method, allowing for partial updates to the list's properties. |
-| `delete_contact` | Removes specified contacts from a marketing list by their IDs, accepting a list of contact IDs as a required query parameter. |
+| `delete_contact` | Deletes contacts in the marketing system using the specified IDs or clears all contacts if the "delete_all_contacts" parameter is set, returning status codes to indicate the outcome of the operation. |
 | `list_contact_count` | Retrieves the total number of contacts in the specified marketing list. |
 | `list_marketing_segment` | Retrieves a list of marketing lists, allowing pagination through optional parameters for page size and page token. |
-| `create_segment` | Creates a new marketing segment using the API at path "/v3/marketing/segments/2.0" and returns a status indicating the creation result. |
+| `create_segment` | Creates a new segment in the contact database using a JSON payload. |
 | `refresh_segment` | Refreshes a specified marketing segment by its ID, ensuring that the segment is updated to reflect any changes in contact data or segment criteria. |
-| `delete_segment` | Deletes a marketing segment identified by the provided segment ID and returns a status code indicating the outcome of the operation. |
-| `get_segment` | Retrieves details about a marketing segment by its ID, optionally including query JSON, using the GET method. |
 | `update_segment` | Updates a marketing segment using the PATCH method, allowing partial modifications to the specified segment resource. |
-| `delete_segment` | Deletes a marketing segment identified by the provided segment ID and returns a status code indicating the outcome of the operation. |
-| `get_segment` | Retrieves details about a marketing segment by its ID, optionally including query JSON, using the GET method. |
+| `get_segment` | Retrieves details for a specific marketing segment, identified by its segment ID, with optional filtering by sampling contacts. |
 | `list_sender` | Retrieves a list of senders using the API endpoint at "/v3/senders" with the "GET" method, potentially operating on behalf of another entity. |
-| `create_sender` | Creates a new sender resource using the provided data in the request body and returns a 201 status code on success. |
-| `delete_sender` | Deletes a sender with the specified ID using the DELETE method and returns a successful response if the operation is completed, with possible error responses for unauthorized access or a non-existent sender. |
-| `get_sender` | Retrieves information about a sender identified by the specified `{sender_id}` using the "GET" method. |
-| `update_sender` | Updates a sender with the specified ID using partial modifications via a JSON payload, returning success or error responses based on the outcome. |
-| `reset_sender_verification` | Resends a verification request for the specified sender using the POST method. |
+| `delete_sender` | Deletes a marketing sender with the specified ID using the DELETE method, returning a successful response with no content if found, or an error if unauthorized or not found. |
+| `update_sender` | Updates the properties of a marketing sender resource identified by the given ID using a PATCH request and returns the appropriate status code. |
 | `delete_single_sends` | Deletes one or more Single Sends from SendGrid's marketing campaigns by ID, permanently removing them from the system. |
 | `list_single_send` | Retrieves a paginated list of all Single Sends (one-time, non-automated email campaigns) with condensed details about each, allowing optional page size and token parameters for result pagination. |
 | `create_single_send` | Creates a new single send email campaign using the provided request data. |
-| `list_category` | Retrieves a list of the latest 1,000 unique categories associated with all Single Sends in ascending order. |
 | `search_single_send` | Searches yielded no direct description of the specific "/v3/marketing/singlesends/search" POST operation, but based on standard REST API and endpoint conventions, this endpoint likely performs a search for single-send marketing campaigns using parameters such as pagination (page_size, page_token) provided in the query and a JSON request body. |
 | `delete_single_send` | Deletes a single send marketing campaign identified by the specified ID using the DELETE method. |
 | `get_single_send` | Retrieves detailed information about a specific Single Send using its ID. |
@@ -205,7 +184,6 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `download_csv` | Downloads a message file identified by the provided download UUID using the GET method. |
 | `get_message` | Retrieves details of a specific message by its ID using the "GET" method at the "/v3/messages/{msg_id}" path. |
 | `list_partner_setting` | Retrieves a paginated list of partner settings with support for limiting and offsetting results. |
-| `list_account` | Retrieves information about the GitHub user account using the "GET /v3/user/account" method. |
 | `create_account` | Creates a new partner account using the provided JSON data and returns a "201 Created" response upon success. |
 | `delete_account` | Deletes a partner account identified by the specified `accountID` using the DELETE method, returning a 204 status on success. |
 | `list_account_offering` | Retrieves a list of offerings associated with a specific partner account using the account ID. |
@@ -219,14 +197,13 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `list_scope_request` | Retrieves a list of scope requests using the "GET" method, allowing optional parameters for pagination and limit. |
 | `deny_scope_request` | Deletes a scope request with the specified request ID using the GitHub API and returns a status message if successful. |
 | `approve_scope_request` | Approves a pending scope request with the specified `request_id` using the GitHub API and returns a status message. |
-| `list_ip` | Retrieves a list of IP addresses based on specified query parameters, including filtering by lease status, enabled status, pool assignment, and other criteria. |
 | `add_ip` | Submits a list of IP addresses using a JSON payload via the POST method to the "/v3/send_ips/ips" endpoint, returning a success status code upon completion. |
 | `get_ip` | Retrieves detailed information for a specified IP address, including assignment status, associated pools, and optional region details. |
 | `update_ip` | Partially updates the IP resource at the specified path "/v3/send_ips/ips/{ip}" using a JSON payload to modify specific properties. |
 | `list_sub_user_assigned_to_ip` | Retrieves information about subusers associated with a specified IP address, allowing optional filtering by a limit parameter. |
 | `add_sub_users_to_ip` | Adds multiple subusers to a specific IP address in a single batch operation using the provided data in the request body. |
 | `delete_sub_users_from_ip` | Deletes multiple subusers associated with a specified IP address in a single batch operation, supporting various response status codes including success (204), bad request (400), unauthorized (401), and server error (500). |
-| `list_ip_pool` | Retrieves a list of IP pools based on provided parameters such as limit, after key, query IP, region, and include region, returning a successful response with details about the IP pools. |
+| `list_ip_pool` | Retrieves a list of IP pools using the "GET" method at the "/v3/ips/pools" path. |
 | `create_ip_pool` | Creates IP pools using a JSON payload and returns a successful creation status upon completion. |
 | `delete_ip_pool` | Deletes a specific IP pool identified by the {poolid} using the DELETE method, returning a 204 No Content response upon successful deletion. |
 | `get_ip_pool` | Retrieves details for a specified IP pool, including its name, ID, and a sample list of associated IP addresses[1]. |
@@ -234,12 +211,9 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `list_ip_assigned_to_ip_pool` | Retrieves a list of IP addresses within a specified pool, optionally including region information and limited by a specified after key. |
 | `add_ips_to_ip_pool` | Adds multiple IP addresses to a pool using a batch operation via the POST method. |
 | `delete_ips_from_ip_pool` | Deletes multiple IP addresses in a specified pool using the POST method with a JSON body containing IP details and returns a status message based on the response codes 204, 400, 401, or 500. |
-| `list_sender` | Retrieves a list of senders using the API endpoint at "/v3/senders" with the "GET" method, potentially operating on behalf of another entity. |
-| `create_sender` | Creates a new sender resource using the provided data in the request body and returns a 201 status code on success. |
-| `delete_sender` | Deletes a sender with the specified ID using the DELETE method and returns a successful response if the operation is completed, with possible error responses for unauthorized access or a non-existent sender. |
-| `get_sender` | Retrieves information about a sender identified by the specified `{sender_id}` using the "GET" method. |
-| `update_sender` | Updates a sender with the specified ID using partial modifications via a JSON payload, returning success or error responses based on the outcome. |
-| `reset_sender_verification` | Resends a verification request for the specified sender using the POST method. |
+| `create_sender` | Adds a new sender to the marketing senders list using the SendGrid API and returns a status code indicating the success or failure of the operation. |
+| `get_sender` | Retrieves the details of a specific sender by ID using the GET method at the "/v3/marketing/senders/{id}" endpoint. |
+| `reset_sender_verification` | Resends a verification email for a specified sender identity using the SendGrid API. |
 | `create_sso_certificate` | Creates a new SSO certificate using the provided JSON data, enabling Single Sign-On configurations between an Identity Provider (IdP) and a service. |
 | `delete_sso_certificate` | Deletes a certificate with the specified ID from the system using the "DELETE" method, returning appropriate status codes based on the operation's success or failure. |
 | `get_sso_certificate` | Retrieves detailed information about a specific SSO certificate identified by the given certificate ID. |
@@ -252,7 +226,6 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `list_sso_integration_certificate` | Retrieves information about certificates associated with a specific SSO integration identified by the `integration_id`. |
 | `create_sso_teammate` | Adds team members using single sign-on (SSO) and returns a status message upon successful addition. |
 | `update_sso_teammate` | Updates the team membership or role of a specified user in a team using their username, supporting various permission checks and returning appropriate status codes. |
-| `list_stat` | Retrieves statistical data for specified subusers within a defined time period, allowing for optional filtering by date range, aggregation method, and pagination control. |
 | `list_subuser` | Retrieves a list of subusers for a given username, allowing filtering by region and customization of the response through pagination and optional inclusion of the region. |
 | `create_subuser` | Creates a new subuser using the GitHub API and returns a response based on the request's outcome. |
 | `list_reputation` | Retrieves the reputation information for specified usernames using the GET method. |
@@ -295,16 +268,15 @@ This is automatically generated from OpenAPI schema for the SendgridApp API.
 | `delete_teammate` | Removes a teammate from a GitHub organization using the GitHub API and returns a status code indicating success or failure. |
 | `get_teammate` | Retrieves information about a GitHub user's teammate with the specified username using the "GET" method. |
 | `update_teammate` | Updates the details of a teammate identified by username within an organization using JSON-formatted data and supports acting on behalf of another user. |
-| `list_template` | Retrieves a list of templates using the "GET" method, allowing parameters such as generations, page size, and page token for filtering and pagination. |
+| `list_template` | Retrieves the current template mail settings for the specified account using the SendGrid API. |
 | `create_template` | Creates a new template using the JSON data provided in the request body and returns a successful creation response with a 201 status code. |
 | `delete_template` | Deletes a template identified by the `template_id` in the `/v3/templates/{template_id}` path, returning a successful response with no content (204). |
 | `get_template` | Retrieves detailed information for the specified template identified by its template_id. |
-| `update_template` | Modifies a specific template by updating its properties using the PATCH method, allowing for partial changes to the template identified by {template_id}. |
+| `update_template` | Updates the mail settings template using the PATCH method, allowing for partial modifications to the existing resource. |
 | `duplicate_template` | Creates a new resource related to a template identified by `{template_id}` using a JSON payload and returns a successful creation status with a 201 response code. |
 | `create_template_version` | Creates a new version for a specified template using the POST method and returns a 201 Created response upon success. |
 | `delete_template_version` | Deletes a specific version of a template identified by the provided template ID and version ID. |
 | `get_template_version` | Retrieves a specific version of a transactional template by its template ID and version ID using the SendGrid API. |
-| `update_template_version` | Partially updates a specific version of a template with the provided details. |
 | `activate_template_version` | Activates a specific version of a template by sending a POST request with the template and version IDs. |
 | `list_tracking_setting` | Retrieves the current tracking settings for an account using the SendGrid API. |
 | `list_click_tracking_setting` | Retrieves the current click tracking settings for the specified configuration using the "GET" method. |
