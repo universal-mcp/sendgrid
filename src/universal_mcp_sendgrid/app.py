@@ -1016,27 +1016,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_category(self, limit=None, category=None, offset=None) -> list[Any]:
-        """
-        Get a list of categories with optional filtering and pagination parameters.
-
-        Args:
-            limit (integer): The "limit" parameter, located in the query string, is an integer that specifies the maximum number of category items to return in the response, with a default value of 50.
-            category (string): Filter the results to include only items belonging to the specified category.
-            offset (integer): The number of items in the list to skip over before starting to retrieve the items for the requested page. The default `offset` of `0` represents the beginning of the list, i.e. the start of the first page. To request the second page of the list, set the `offset` to the page size as determined by `limit`. Use multiples of the page size as your `offset` to request further consecutive pages. E.g. assume your page size is set to `10`. An `offset` of `10` requests the second page, an `offset` of `20` requests the third page and so on, provided there are sufficiently many items in your list.
-
-        Returns:
-            list[Any]: API response data.
-
-        Tags:
-            Categories
-        """
-        url = f"{self.base_url}/v3/categories"
-        query_params = {k: v for k, v in [('limit', limit), ('category', category), ('offset', offset)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
     def list_category_stat(self, start_date, categories, end_date=None, aggregated_by=None) -> list[Any]:
         """
         Retrieves statistical data for specified categories within a date range, optionally aggregated by a given parameter.
@@ -1714,78 +1693,7 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def delete_segment(self, segment_id, delete_contacts=None) -> Any:
-        """
-        Deletes a segment in the contact database using the "DELETE" method, optionally removing associated contacts based on a query parameter, and returns no content if successful.
 
-        Args:
-            segment_id (string): segment_id
-            delete_contacts (boolean): Optional boolean parameter indicating whether to delete the contacts associated with the segment being deleted.
-
-        Returns:
-            Any: API response data.
-
-        Tags:
-            Segments
-        """
-        if segment_id is None:
-            raise ValueError("Missing required parameter 'segment_id'")
-        url = f"{self.base_url}/v3/contactdb/segments/{segment_id}"
-        query_params = {k: v for k, v in [('delete_contacts', delete_contacts)] if v is not None}
-        response = self._delete(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def get_segment(self, segment_id) -> dict[str, Any]:
-        """
-        Retrieves details about a specific contact database segment by its ID using the "GET" method.
-
-        Args:
-            segment_id (string): segment_id
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Segments
-        """
-        if segment_id is None:
-            raise ValueError("Missing required parameter 'segment_id'")
-        url = f"{self.base_url}/v3/contactdb/segments/{segment_id}"
-        query_params = {}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def update_segment(self, segment_id, conditions=None, list_id=None, name=None) -> dict[str, Any]:
-        """
-        Updates a contact database segment with the specified ID using the provided JSON data.
-
-        Args:
-            segment_id (string): segment_id
-            conditions (array): The conditions by which this segment should be created.
-            list_id (number): The list ID you would like this segment to be built from.
-            name (string): name
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Segments
-        """
-        if segment_id is None:
-            raise ValueError("Missing required parameter 'segment_id'")
-        request_body = {
-            'conditions': conditions,
-            'list_id': list_id,
-            'name': name,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/contactdb/segments/{segment_id}"
-        query_params = {}
-        response = self._patch(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def list_recipient_for_segment(self, segment_id, page=None, page_size=None) -> dict[str, Any]:
         """
@@ -2140,57 +2048,8 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_ip(self, ip=None, exclude_whitelabels=None, limit=None, offset=None, subuser=None, sort_by_direction=None) -> list[Any]:
-        """
-        Retrieves a list of IPs with optional filtering by IP address, exclusion of whitelabels, and sorting, using pagination controls.
 
-        Args:
-            ip (string): The `ip` parameter is a string query parameter used to specify the IP address in the GET request to the `/v3/ips` endpoint.
-            exclude_whitelabels (boolean): Indicates whether to exclude whitelabel IP addresses from the response.
-            limit (integer): Specifies the maximum number of IP addresses to return in the response, with a default value of 10.
-            offset (integer): The number of items in the list to skip over before starting to retrieve the items for the requested page. The default `offset` of `0` represents the beginning of the list, i.e. the start of the first page. To request the second page of the list, set the `offset` to the page size as determined by `limit`. Use multiples of the page size as your `offset` to request further consecutive pages. E.g. assume your page size is set to `10`. An `offset` of `10` requests the second page, an `offset` of `20` requests the third page and so on, provided there are sufficiently many items in your list.
-            subuser (string): Specifies the subuser associated with the IP addresses to retrieve; only IPs linked to this subuser will be returned.
-            sort_by_direction (string): Specifies the sorting direction for the results returned by the API endpoint, such as "asc" for ascending or "desc" for descending.
-
-        Returns:
-            list[Any]: API response data.
-
-        Tags:
-            IP Addresses
-        """
-        url = f"{self.base_url}/v3/ips"
-        query_params = {k: v for k, v in [('ip', ip), ('exclude_whitelabels', exclude_whitelabels), ('limit', limit), ('offset', offset), ('subuser', subuser), ('sort_by_direction', sort_by_direction)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def add_ip(self, count=None, subusers=None, warmup=None) -> dict[str, Any]:
-        """
-        Creates a new IP resource using JSON data and returns a successful creation status.
-
-        Args:
-            count (integer): The amount of IPs to add to the account.
-            subusers (array): Array of usernames to be assigned a send IP.
-            warmup (boolean): Whether or not to warmup the IPs being added.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            IP Addresses
-        """
-        request_body = {
-            'count': count,
-            'subusers': subusers,
-            'warmup': warmup,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/ips"
-        query_params = {}
-        response = self._post(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
+ 
     def list_assigned_ip(self) -> list[Any]:
         """
         Retrieves a list of assigned IP addresses using the "GET" method at the "/v3/ips/assigned" path.
@@ -2223,96 +2082,9 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def create_ip_pool(self, name=None) -> dict[str, Any]:
-        """
-        Creates a new IP pool using the provided JSON data and returns a successful response.
 
-        Args:
-            name (string): The name of your new IP pool.
 
-        Returns:
-            dict[str, Any]: API response data.
 
-        Tags:
-            IP Pools
-        """
-        request_body = {
-            'name': name,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/ips/pools"
-        query_params = {}
-        response = self._post(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def delete_ip_pool(self, pool_name) -> dict[str, Any]:
-        """
-        Deletes an IP pool identified by the specified pool name and returns a successful response if the operation is completed without providing any content.
-
-        Args:
-            pool_name (string): pool_name
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            IP Pools
-        """
-        if pool_name is None:
-            raise ValueError("Missing required parameter 'pool_name'")
-        url = f"{self.base_url}/v3/ips/pools/{pool_name}"
-        query_params = {}
-        response = self._delete(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def get_ip_pool(self, pool_name) -> dict[str, Any]:
-        """
-        Retrieves information about the specified IP pool by its name, returning a successful response if found and a "Not Found" error otherwise.
-
-        Args:
-            pool_name (string): pool_name
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            IP Pools
-        """
-        if pool_name is None:
-            raise ValueError("Missing required parameter 'pool_name'")
-        url = f"{self.base_url}/v3/ips/pools/{pool_name}"
-        query_params = {}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def update_ip_pool(self, pool_name, name=None) -> dict[str, Any]:
-        """
-        Updates an existing IP pool resource using the specified pool name and returns a success message if the operation is successful.
-
-        Args:
-            pool_name (string): pool_name
-            name (string): The new name for your IP pool.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            IP Pools
-        """
-        if pool_name is None:
-            raise ValueError("Missing required parameter 'pool_name'")
-        request_body = {
-            'name': name,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/ips/pools/{pool_name}"
-        query_params = {}
-        response = self._put(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def add_ip_to_ip_pool(self, pool_name, ip=None) -> dict[str, Any]:
         """
@@ -2461,26 +2233,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def get_ip(self, ip_address) -> dict[str, Any]:
-        """
-        Retrieves details for the specified IP address.
-
-        Args:
-            ip_address (string): ip_address
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            IP Addresses
-        """
-        if ip_address is None:
-            raise ValueError("Missing required parameter 'ip_address'")
-        url = f"{self.base_url}/v3/ips/{ip_address}"
-        query_params = {}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def create_mail_batch(self) -> dict[str, Any]:
         """
@@ -3031,21 +2783,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_contact_count(self) -> dict[str, Any]:
-        """
-        Retrieves the total count of marketing contacts available in the system.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Contacts
-        """
-        url = f"{self.base_url}/v3/marketing/contacts/count"
-        query_params = {}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def list_export_contact(self) -> dict[str, Any]:
         """
@@ -3645,28 +3382,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def delete_contact(self, id, contact_ids) -> dict[str, Any]:
-        """
-        Removes specified contacts from a marketing list by their IDs, accepting a list of contact IDs as a required query parameter.
-
-        Args:
-            id (string): id
-            contact_ids (string): Specifies a comma-separated list of contact IDs to remove from the marketing list.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Lists
-        """
-        if id is None:
-            raise ValueError("Missing required parameter 'id'")
-        url = f"{self.base_url}/v3/marketing/lists/{id}/contacts"
-        query_params = {k: v for k, v in [('contact_ids', contact_ids)] if v is not None}
-        response = self._delete(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
     def list_contact_count(self, id) -> dict[str, Any]:
         """
         Retrieves the total number of contacts in the specified marketing list.
@@ -3710,32 +3425,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def create_segment(self, name=None, parent_list_ids=None, query_dsl=None) -> dict[str, Any]:
-        """
-        Creates a new marketing segment using the API at path "/v3/marketing/segments/2.0" and returns a status indicating the creation result.
-
-        Args:
-            name (string): Name of the segment.
-            parent_list_ids (array): The array of list ids to filter contacts on when building this segment. It allows only one such list id for now. We will support more in future
-            query_dsl (string): SQL query which will filter contacts based on the conditions provided
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Segmenting Contacts V2
-        """
-        request_body = {
-            'name': name,
-            'parent_list_ids': parent_list_ids,
-            'query_dsl': query_dsl,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/marketing/segments/2.0"
-        query_params = {}
-        response = self._post(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def refresh_segment(self, segment_id, user_time_zone) -> dict[str, Any]:
         """
@@ -3834,64 +3523,9 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def delete_segment(self, segment_id) -> dict[str, Any]:
-        """
-        Deletes a marketing segment identified by the provided segment ID and returns a status code indicating the outcome of the operation.
 
-        Args:
-            segment_id (string): segment_id
 
-        Returns:
-            dict[str, Any]: API response data.
 
-        Tags:
-            Segmenting Contacts
-        """
-        if segment_id is None:
-            raise ValueError("Missing required parameter 'segment_id'")
-        url = f"{self.base_url}/v3/marketing/segments/{segment_id}"
-        query_params = {}
-        response = self._delete(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def get_segment(self, segment_id, query_json=None) -> dict[str, Any]:
-        """
-        Retrieves details about a marketing segment by its ID, optionally including query JSON, using the GET method.
-
-        Args:
-            segment_id (string): segment_id
-            query_json (boolean): A boolean parameter indicating whether to return query details in JSON format.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Segmenting Contacts
-        """
-        if segment_id is None:
-            raise ValueError("Missing required parameter 'segment_id'")
-        url = f"{self.base_url}/v3/marketing/segments/{segment_id}"
-        query_params = {k: v for k, v in [('query_json', query_json)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def list_sender(self) -> dict[str, Any]:
-        """
-        Retrieves a list of marketing email senders using the GET method at the "/v3/marketing/senders" path.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Senders
-        """
-        url = f"{self.base_url}/v3/marketing/senders"
-        query_params = {}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def create_sender(self, address=None, address_2=None, city=None, country=None, from_=None, nickname=None, reply_to=None, state=None, zip=None) -> dict[str, Any]:
         """
@@ -4631,25 +4265,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_account(self, offset=None, limit=None) -> dict[str, Any]:
-        """
-        Retrieves a list of partner accounts with optional filters for last update and count of records.
-
-        Args:
-            offset (string): The last item successfully retrieved Example: 'sg2a2bcd3ef4ab5c67d8efab91c01de2fa'.
-            limit (integer): The number of items to return Example: '2'.
-
-        Returns:
-            dict[str, Any]: OK
-
-        Tags:
-            Account
-        """
-        url = f"{self.base_url}/v3/partners/accounts"
-        query_params = {k: v for k, v in [('offset', offset), ('limit', limit)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def create_account(self, offerings, profile=None) -> dict[str, Any]:
         """
@@ -5194,29 +4809,7 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_ip_pool(self, limit=None, after_key=None, ip=None, region=None, include_region=None) -> dict[str, Any]:
-        """
-        Retrieves a list of IP pools based on provided parameters such as limit, after key, query IP, region, and include region, returning a successful response with details about the IP pools.
-
-        Args:
-            limit (integer): Specifies the number of results to be returned by the API. This parameter can be used in combination with the `before_key` or `after_key` parameters to iterate through paginated results.
-            after_key (integer): Specifies which items to be returned by the API. When the `after_key` is specified, the API will return items beginning from the first item after the item specified. This parameter can be used in combination with `limit` to iterate through paginated results.
-            ip (string): Specifies an IP address. The `ip` query parameter can be used to filter results by IP address.
-            region (string): Allowed values are `all`, `eu`, and `us`. If you provide a specific region, results will include all pools that have at least one IP in the filtered region. If `all`, pools with at least one IP (regardless of region) will be returned. If the `region` filter is not provided, the query returns all pools, including empty ones.
-            include_region (boolean): Boolean indicating whether or not to return the IP Pool's region information in the response.
-
-        Returns:
-            dict[str, Any]: OK
-
-        Tags:
-            IP Address Management
-        """
-        url = f"{self.base_url}/v3/send_ips/pools"
-        query_params = {k: v for k, v in [('limit', limit), ('after_key', after_key), ('ip', ip), ('region', region), ('include_region', include_region)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
+ 
     def create_ip_pool(self, ips=None, name=None) -> dict[str, Any]:
         """
         Creates IP pools using a JSON payload and returns a successful creation status upon completion.
@@ -5441,149 +5034,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def create_sender(self, address=None, address_2=None, city=None, country=None, from_=None, nickname=None, reply_to=None, state=None, zip=None) -> dict[str, Any]:
-        """
-        Creates a new sender resource using the provided data in the request body and returns a 201 status code on success.
-
-        Args:
-            address (string): The physical address of the sender identity.
-            address_2 (string): Additional sender identity address information.
-            city (string): The city of the sender identity.
-            country (string): The country of the sender identity.
-            from_ (object): from
-            nickname (string): A nickname for the sender identity. Not used for sending.
-            reply_to (object): reply_to
-            state (string): The state of the sender identity.
-            zip (string): The zipcode of the sender identity.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Sender Identities
-        """
-        request_body = {
-            'address': address,
-            'address_2': address_2,
-            'city': city,
-            'country': country,
-            'from': from_,
-            'nickname': nickname,
-            'reply_to': reply_to,
-            'state': state,
-            'zip': zip,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/senders"
-        query_params = {}
-        response = self._post(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def delete_sender(self, sender_id) -> dict[str, Any]:
-        """
-        Deletes a sender with the specified ID using the DELETE method and returns a successful response if the operation is completed, with possible error responses for unauthorized access or a non-existent sender.
-
-        Args:
-            sender_id (string): sender_id
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Sender Identities
-        """
-        if sender_id is None:
-            raise ValueError("Missing required parameter 'sender_id'")
-        url = f"{self.base_url}/v3/senders/{sender_id}"
-        query_params = {}
-        response = self._delete(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def get_sender(self, sender_id) -> dict[str, Any]:
-        """
-        Retrieves information about a sender identified by the specified `{sender_id}` using the "GET" method.
-
-        Args:
-            sender_id (string): sender_id
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Sender Identities
-        """
-        if sender_id is None:
-            raise ValueError("Missing required parameter 'sender_id'")
-        url = f"{self.base_url}/v3/senders/{sender_id}"
-        query_params = {}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def update_sender(self, sender_id, address=None, address_2=None, city=None, country=None, from_=None, nickname=None, reply_to=None, state=None, zip=None) -> dict[str, Any]:
-        """
-        Updates a sender with the specified ID using partial modifications via a JSON payload, returning success or error responses based on the outcome.
-
-        Args:
-            sender_id (string): sender_id
-            address (string): The physical address of the sender identity.
-            address_2 (string): Additional sender identity address information.
-            city (string): The city of the sender identity.
-            country (string): The country of the sender identity.
-            from_ (object): from
-            nickname (string): A nickname for the sender identity. Not used for sending.
-            reply_to (object): reply_to
-            state (string): The state of the sender identity.
-            zip (string): The zipcode of the sender identity.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Sender Identities
-        """
-        if sender_id is None:
-            raise ValueError("Missing required parameter 'sender_id'")
-        request_body = {
-            'address': address,
-            'address_2': address_2,
-            'city': city,
-            'country': country,
-            'from': from_,
-            'nickname': nickname,
-            'reply_to': reply_to,
-            'state': state,
-            'zip': zip,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/senders/{sender_id}"
-        query_params = {}
-        response = self._patch(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
-
-    def reset_sender_verification(self, sender_id) -> dict[str, Any]:
-        """
-        Resends a verification request for the specified sender using the POST method.
-
-        Args:
-            sender_id (string): sender_id
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Sender Identities
-        """
-        if sender_id is None:
-            raise ValueError("Missing required parameter 'sender_id'")
-        url = f"{self.base_url}/v3/senders/{sender_id}/resend_verification"
-        query_params = {}
-        response = self._post(url, data={}, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def create_sso_certificate(self, enabled=None, integration_id=None, public_certificate=None) -> dict[str, Any]:
         """
@@ -5931,28 +5381,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_stat(self, start_date, limit=None, offset=None, aggregated_by=None, end_date=None) -> list[Any]:
-        """
-        Retrieves statistical data for the specified resource, allowing filtering and aggregation by date, with support for pagination and advanced query parameters.
-
-        Args:
-            start_date (string): The starting date of the statistics to retrieve. Must follow format YYYY-MM-DD.
-            limit (integer): The number of results to return.
-            offset (integer): The point in the list to begin retrieving results.
-            aggregated_by (string): How to group the statistics. Must be either "day", "week", or "month".
-            end_date (string): The end date of the statistics to retrieve. Defaults to today. Must follow format YYYY-MM-DD.
-
-        Returns:
-            list[Any]: API response data.
-
-        Tags:
-            Stats
-        """
-        url = f"{self.base_url}/v3/stats"
-        query_params = {k: v for k, v in [('limit', limit), ('offset', offset), ('aggregated_by', aggregated_by), ('start_date', start_date), ('end_date', end_date)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def list_subuser(self, username=None, limit=None, region=None, include_region=None, offset=None) -> list[Any]:
         """
@@ -6923,26 +6351,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def list_template(self, page_size, generations=None, page_token=None) -> dict[str, Any]:
-        """
-        Retrieves a list of templates using the "GET" method, allowing parameters such as generations, page size, and page token for filtering and pagination.
-
-        Args:
-            page_size (number): The number of items to return per page in the response.
-            generations (string): Specifies which template generation to use, with "legacy" as the default value.
-            page_token (string): Optional string parameter used to retrieve the next page of results in a paginated response.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Templates
-        """
-        url = f"{self.base_url}/v3/templates"
-        query_params = {k: v for k, v in [('generations', generations), ('page_size', page_size), ('page_token', page_token)] if v is not None}
-        response = self._get(url, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def create_template(self, generation=None, name=None) -> dict[str, Any]:
         """
@@ -7011,31 +6419,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def update_template(self, template_id, name=None) -> dict[str, Any]:
-        """
-        Modifies a specific template by updating its properties using the PATCH method, allowing for partial changes to the template identified by {template_id}.
-
-        Args:
-            template_id (string): template_id
-            name (string): The name of the transactional template.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Templates
-        """
-        if template_id is None:
-            raise ValueError("Missing required parameter 'template_id'")
-        request_body = {
-            'name': name,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/templates/{template_id}"
-        query_params = {}
-        response = self._patch(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def duplicate_template(self, template_id, name=None) -> dict[str, Any]:
         """
@@ -7151,48 +6534,6 @@ class SendgridApp(APIApplication):
         response.raise_for_status()
         return response.json()
 
-    def update_template_version(self, template_id, version_id, active=None, editor=None, generate_plain_content=None, html_content=None, name=None, plain_content=None, subject=None, test_data=None) -> dict[str, Any]:
-        """
-        Partially updates a specific version of a template with the provided details.
-
-        Args:
-            template_id (string): template_id
-            version_id (string): version_id
-            active (integer): active
-            editor (string): editor
-            generate_plain_content (boolean): If true, plain_content is always generated from html_content. If false, plain_content is not altered.
-            html_content (string): The HTML content of the version. Maximum of 1048576 bytes allowed.
-            name (string): Name of the transactional template version.
-            plain_content (string): Text/plain content of the transactional template version. Maximum of 1048576 bytes allowed.
-            subject (string): Subject of the new transactional template version.
-            test_data (string): For dynamic templates only, the mock json data that will be used for template preview and test sends.
-
-        Returns:
-            dict[str, Any]: API response data.
-
-        Tags:
-            Templates Versions
-        """
-        if template_id is None:
-            raise ValueError("Missing required parameter 'template_id'")
-        if version_id is None:
-            raise ValueError("Missing required parameter 'version_id'")
-        request_body = {
-            'active': active,
-            'editor': editor,
-            'generate_plain_content': generate_plain_content,
-            'html_content': html_content,
-            'name': name,
-            'plain_content': plain_content,
-            'subject': subject,
-            'test_data': test_data,
-        }
-        request_body = {k: v for k, v in request_body.items() if v is not None}
-        url = f"{self.base_url}/v3/templates/{template_id}/versions/{version_id}"
-        query_params = {}
-        response = self._patch(url, data=request_body, params=query_params)
-        response.raise_for_status()
-        return response.json()
 
     def activate_template_version(self, template_id, version_id) -> dict[str, Any]:
         """
@@ -9260,10 +8601,7 @@ class SendgridApp(APIApplication):
             self.get_recipient_list,
             self.list_reserved_field,
             self.list_segment,
-            self.create_segment,
             self.delete_segment,
-            self.get_segment,
-            self.update_segment,
             self.list_recipient_for_segment,
             self.list_status,
             self.list_design,
@@ -9280,13 +8618,7 @@ class SendgridApp(APIApplication):
             self.list_subuser_engagement_quality_score,
             self.list_geo_stat,
             self.list_ip,
-            self.add_ip,
             self.list_assigned_ip,
-            self.list_ip_pool,
-            self.create_ip_pool,
-            self.delete_ip_pool,
-            self.get_ip_pool,
-            self.update_ip_pool,
             self.add_ip_to_ip_pool,
             self.delete_ip_from_ip_pool,
             self.list_remaining_ip_count,
@@ -9294,7 +8626,6 @@ class SendgridApp(APIApplication):
             self.warm_up_ip,
             self.stop_ip_warm_up,
             self.get_warm_up_ip,
-            self.get_ip,
             self.create_mail_batch,
             self.get_mail_batch,
             self.send_mail,
@@ -9309,14 +8640,10 @@ class SendgridApp(APIApplication):
             self.update_forward_bounce,
             self.list_forward_spam,
             self.update_forward_spam,
-            self.list_template,
-            self.update_template,
             self.list_mailbox_provider_stat,
-            self.delete_contact,
             self.list_contact,
             self.update_contact,
             self.list_batched_contact,
-            self.list_contact_count,
             self.list_export_contact,
             self.export_contact,
             self.get_export_contact,
@@ -9346,21 +8673,14 @@ class SendgridApp(APIApplication):
             self.list_marketing_segment,
             self.create_segment,
             self.refresh_segment,
-            self.delete_segment,
-            self.get_segment,
             self.update_segment,
-            self.delete_segment,
             self.get_segment,
             self.list_sender,
-            self.create_sender,
             self.delete_sender,
-            self.get_sender,
             self.update_sender,
-            self.reset_sender_verification,
             self.delete_single_sends,
             self.list_single_send,
             self.create_single_send,
-            self.list_category,
             self.search_single_send,
             self.delete_single_send,
             self.get_single_send,
@@ -9382,7 +8702,6 @@ class SendgridApp(APIApplication):
             self.download_csv,
             self.get_message,
             self.list_partner_setting,
-            self.list_account,
             self.create_account,
             self.delete_account,
             self.list_account_offering,
@@ -9396,7 +8715,6 @@ class SendgridApp(APIApplication):
             self.list_scope_request,
             self.deny_scope_request,
             self.approve_scope_request,
-            self.list_ip,
             self.add_ip,
             self.get_ip,
             self.update_ip,
@@ -9411,11 +8729,8 @@ class SendgridApp(APIApplication):
             self.list_ip_assigned_to_ip_pool,
             self.add_ips_to_ip_pool,
             self.delete_ips_from_ip_pool,
-            self.list_sender,
             self.create_sender,
-            self.delete_sender,
             self.get_sender,
-            self.update_sender,
             self.reset_sender_verification,
             self.create_sso_certificate,
             self.delete_sso_certificate,
@@ -9429,7 +8744,6 @@ class SendgridApp(APIApplication):
             self.list_sso_integration_certificate,
             self.create_sso_teammate,
             self.update_sso_teammate,
-            self.list_stat,
             self.list_subuser,
             self.create_subuser,
             self.list_reputation,
@@ -9481,7 +8795,6 @@ class SendgridApp(APIApplication):
             self.create_template_version,
             self.delete_template_version,
             self.get_template_version,
-            self.update_template_version,
             self.activate_template_version,
             self.list_tracking_setting,
             self.list_click_tracking_setting,
